@@ -1,3 +1,17 @@
+:root {
+  color-scheme: light dark;
+  --primary-bg-light: #667eea;
+  --secondary-bg-light: #764ba2;
+  --primary-bg-dark: #333c62;
+  --secondary-bg-dark: #11051d;
+  --primary-bg: light-dark(var(--primary-bg-light), var(--primary-bg-dark));
+  --secondary-bg: light-dark(
+    var(--secondary-bg-light),
+    var(--secondary-bg-dark)
+  );
+  --max-allocatable-width: 375px; /* default value*/
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +20,11 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-bg) 0%,
+    var(--secondary-bg) 100%
+  );
   min-height: 100vh;
   display: flex;
   height: 100vh;
@@ -14,37 +32,102 @@ body {
 
 .sidebar {
   width: 300px;
+  min-width: 250px;
+  max-width: var(--max-allocatable-width);
+  height: auto;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: solid 1px rgba(255, 255, 255, 0.2);
+  padding: 1rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   z-index: 1000;
-}
+  resize: horizontal;
+  position: relative;
+  overflow-x: hidden;
 
-.main-content {
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
+  /* &::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: ew-resize;
+  } */
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .section {
-  margin-bottom: 25px;
-  padding: 15px;
+  margin-bottom: 15px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.section h3 {
-  margin-bottom: 15px;
+.section-header {
+  padding: 15px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.section-header:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.section-header h3 {
+  margin: 0;
   color: white;
   font-size: 16px;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.section-toggle {
+  color: white;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.section-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.section-content {
+  padding: 15px;
+  display: block;
+}
+
+.section-content.collapsed {
+  display: none;
 }
 
 h2 {
@@ -129,6 +212,27 @@ button:hover {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
+.days-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.day-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-size: 14px;
+}
+
+.day-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: rgba(255, 255, 255, 0.8);
+}
+
 .courses-list,
 .locations-list {
   min-height: 100px;
@@ -186,6 +290,22 @@ button:hover {
   background: rgba(40, 167, 69, 0.4);
 }
 
+.save-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.save-btn {
+  background: rgba(40, 167, 69, 0.3);
+  border: 1px solid rgba(40, 167, 69, 0.5);
+}
+
+.save-btn:hover {
+  background: rgba(40, 167, 69, 0.5);
+}
+
 .timetable-container {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
@@ -239,6 +359,28 @@ button:hover {
   background: rgba(33, 150, 243, 0.3) !important;
   border: 2px dashed rgba(33, 150, 243, 0.8) !important;
   box-shadow: inset 0 0 20px rgba(33, 150, 243, 0.2);
+}
+
+.time-slot.editing,
+.day-slot.editing {
+  background: rgba(255, 193, 7, 0.3) !important;
+  border: 2px solid rgba(255, 193, 7, 0.8) !important;
+}
+
+.time-edit-input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 193, 7, 0.8);
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 12px;
+  text-align: center;
+  width: 80px;
+  color: #333;
+  z-index: 100;
 }
 
 .placed-course {
@@ -334,18 +476,59 @@ label {
   bottom: 1px;
 }
 
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
 @media (max-width: 768px) {
   body {
     flex-direction: column;
   }
 
   .sidebar {
-    width: 100%;
+    width: 100dvw;
+    max-width: unset;
     height: auto;
-    max-height: 300px;
+    max-height: 50dvh;
+    resize: vertical;
+  }
+
+  .sidebar::after {
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    right: 0;
+    top: auto;
+    cursor: ns-resize;
   }
 
   .main-content {
     padding: 10px;
+  }
+
+  .days-selection {
+    grid-template-columns: 1fr;
   }
 }

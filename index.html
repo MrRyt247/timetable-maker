@@ -7,85 +7,167 @@
   <title>Timetable Maker</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="sidebar">
-        <h2 style="margin-bottom: 20px; color: #333;">Timetable Creator</h2>
-        
-        <div class="section">
-            <h3>Layout Orientation</h3>
-            <div class="orientation-toggle">
-                <div class="toggle-btn active" data-orientation="portrait">Portrait<br><small>(Days as Columns)</small></div>
-                <div class="toggle-btn" data-orientation="landscape">Landscape<br><small>(Days as Rows)</small></div>
-            </div>
+    <h2>Timetable Maker</h2>
+    
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Layout Orientation</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="orientation-toggle">
+          <div class="toggle-btn active" data-orientation="portrait">Portrait<br><small>(Days as Columns)</small></div>
+          <div class="toggle-btn" data-orientation="landscape">Landscape<br><small>(Days as Rows)</small></div>
         </div>
-
-        <div class="section">
-            <h3>Time Settings</h3>
-            <div class="input-group">
-                <input type="time" id="start-time" value="09:00">
-                <input type="time" id="end-time" value="17:00">
-            </div>
-            <div class="input-group">
-                <label>Duration (minutes):</label>
-                <input type="number" id="time-duration" value="60" min="15" max="240" step="15">
-            </div>
-            <button onclick="generateTimetable()">Update Timetable</button>
-        </div>
-
-        <div class="section">
-            <h3>Add Course</h3>
-            <div class="input-group">
-                <input type="text" id="course-name" placeholder="Course name">
-                <button onclick="addCourse()">Add</button>
-            </div>
-            <div class="courses-list" id="courses-list">
-                <p style="color: #666; font-style: italic;">Courses will appear here</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Add Location</h3>
-            <div class="input-group">
-                <input type="text" id="location-name" placeholder="Room/Location">
-                <button onclick="addLocation()">Add</button>
-            </div>
-            <div class="locations-list" id="locations-list">
-                <p style="color: #666; font-style: italic;">Locations will appear here</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h3>Color Customization</h3>
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
-                <label>Timetable Background:</label>
-                <input type="color" class="color-input" id="bg-color" value="#ffffff">
-                
-                <label>Course Boxes:</label>
-                <input type="color" class="color-input" id="course-color" value="#007bff">
-                
-                <label>Table Borders:</label>
-                <input type="color" class="color-input" id="border-color" value="#dddddd">
-                
-                <label>Headers:</label>
-                <input type="color" class="color-input" id="header-color" value="#f8f9fa">
-            </div>
-            <button onclick="applyColors()" style="margin-top: 10px; width: 100%;">Apply Colors</button>
-        </div>
+      </div>
     </div>
 
-    <div class="main-content">
-        <h2>Time table</h2>
-        <div class="timetable-container">
-            <div class="timetable" id="timetable">
-                <!-- Timetable will be generated here -->
-            </div>
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Day Selection</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="days-selection">
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-monday" value="0" checked>
+            <label for="day-monday">Monday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-tuesday" value="1" checked>
+            <label for="day-tuesday">Tuesday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-wednesday" value="2" checked>
+            <label for="day-wednesday">Wednesday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-thursday" value="3" checked>
+            <label for="day-thursday">Thursday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-friday" value="4" checked>
+            <label for="day-friday">Friday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-saturday" value="5">
+            <label for="day-saturday">Saturday</label>
+          </div>
+          <div class="day-checkbox">
+            <input type="checkbox" id="day-sunday" value="6">
+            <label for="day-sunday">Sunday</label>
+          </div>
         </div>
+        <button onclick="generateTimetable()" style="width: 100%;">Update Days</button>
+      </div>
     </div>
 
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Time Settings</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="input-group">
+          <input type="time" id="start-time" value="09:00">
+          <input type="time" id="end-time" value="17:00">
+        </div>
+        <div class="input-group">
+          <label>Duration (minutes):</label>
+          <input type="number" id="time-duration" value="60" min="15" max="240" step="15">
+        </div>
+        <button onclick="generateTimetable()">Update Timetable</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Add Course</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="input-group">
+          <input type="text" id="course-name" placeholder="Course name">
+          <button onclick="addCourse()">Add</button>
+        </div>
+        <div class="courses-list" id="courses-list">
+          <p>Courses will appear here</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Add Location</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="input-group">
+          <input type="text" id="location-name" placeholder="Room/Location">
+          <button onclick="addLocation()">Add</button>
+        </div>
+        <div class="locations-list" id="locations-list">
+          <p>Locations will appear here</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Color Customization</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+          <label>Timetable Background:</label>
+          <input type="color" class="color-input" id="bg-color" value="#ffffff">
+          
+          <label>Course Boxes:</label>
+          <input type="color" class="color-input" id="course-color" value="#007bff">
+          
+          <label>Table Borders:</label>
+          <input type="color" class="color-input" id="border-color" value="#dddddd">
+          
+          <label>Headers:</label>
+          <input type="color" class="color-input" id="header-color" value="#f8f9fa">
+        </div>
+        <button onclick="applyColors()" style="margin-top: 10px; width: 100%;">Apply Colors</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <h3>Export Timetable</h3>
+        <span class="section-toggle">▼</span>
+      </div>
+      <div class="section-content">
+        <div class="save-buttons">
+          <button class="save-btn" onclick="saveAsJPG()">Save as JPG</button>
+          <button class="save-btn" onclick="saveAsPDF()">Save as PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h2>Timetable</h2>
+    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 10px; font-size: 14px;">
+      💡 Tip: Double-click on any time slot to edit the time directly
+    </p>
+    <div class="timetable-container" id="timetable-container">
+      <div class="timetable" id="timetable">
+        <!-- Timetable will be generated here -->
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
