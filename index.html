@@ -4,667 +4,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timetable Creator</title>
+  <title>Timetable Maker</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      height: 100vh;
-    }
-
-    .sidebar {
-      width: 300px;
-      background: white;
-      padding: 20px;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 20px;
-      overflow: auto;
-    }
-
-    .section {
-      margin-bottom: 25px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      border: 1px solid #e9ecef;
-    }
-
-    .section h3 {
-      margin-bottom: 15px;
-      color: #333;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .input-group {
-      display: flex;
-      margin-bottom: 10px;
-      gap: 8px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="time"],
-    select {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 8px 16px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .color-input {
-      width: 50px !important;
-      height: 35px;
-      padding: 2px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .orientation-toggle {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .toggle-btn {
-      flex: 1;
-      padding: 10px;
-      background: #e9ecef;
-      color: #333;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .toggle-btn.active {
-      background: #007bff;
-      color: white;
-    }
-
-    .courses-list,
-    .locations-list {
-      min-height: 100px;
-      background: white;
-      border: 2px dashed #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 10px;
-    }
-
-    .course-box,
-    .location-item {
-      background: #007bff;
-      color: white;
-      padding: 8px 12px;
-      margin: 5px 0;
-      border-radius: 4px;
-      cursor: move;
-      user-select: none;
-      position: relative;
-      transition: transform 0.2s;
-    }
-
-    .course-box:hover,
-    .location-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .course-box {
-      min-height: 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .location-item {
-      background: #28a745;
-      font-size: 12px;
-    }
-
-    .timetable-container {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      margin-top: 20px;
-    }
-
-    .timetable {
-      display: table;
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .timetable-row {
-      display: table-row;
-    }
-
-    .timetable-cell {
-      display: table-cell;
-      border: 1px solid #ddd;
-      padding: 0;
-      position: relative;
-      vertical-align: top;
-    }
-
-    .time-header,
-    .day-header {
-      background: #f8f9fa;
-      font-weight: 600;
-      text-align: center;
-      padding: 12px 8px;
-      color: #333;
-    }
-
-    .time-slot,
-    .day-slot {
-      height: 60px;
-      min-width: 100px;
-      position: relative;
-      background: white;
-    }
-
-    .time-slot.drop-zone,
-    .day-slot.drop-zone {
-      background: #e3f2fd !important;
-      border: 2px dashed #2196f3 !important;
-    }
-
-    .placed-course {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: #007bff;
-      color: white;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 11px;
-      text-align: center;
-      cursor: move;
-      z-index: 10;
-    }
-
-    .placed-course .course-name {
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
-
-    .placed-course .course-location {
-      font-size: 9px;
-      opacity: 0.9;
-    }
-
-    .ui-draggable-dragging {
-      z-index: 1000 !important;
-      opacity: 0.8;
-    }
-
-    .remove-btn {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      width: 20px;
-      height: 20px;
-      background: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      font-size: 12px;
-      cursor: pointer;
-      display: none;
-    }
-
-    .course-box:hover .remove-btn,
-    .location-item:hover .remove-btn,
-    .placed-course:hover .remove-btn {
-      display: block;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-      }
-
-      .main-content {
-        padding: 10px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="sidebar">
-    <h2 style="margin-bottom: 20px; color: #333;">Timetable Creator</h2>
-
-    <div class="section">
-      <h3>Layout Orientation</h3>
-      <div class="orientation-toggle">
-        <div class="toggle-btn active" data-orientation="portrait">Portrait<br><small>(Days as Columns)</small>
+        <h2 style="margin-bottom: 20px; color: #333;">Timetable Creator</h2>
+        
+        <div class="section">
+            <h3>Layout Orientation</h3>
+            <div class="orientation-toggle">
+                <div class="toggle-btn active" data-orientation="portrait">Portrait<br><small>(Days as Columns)</small></div>
+                <div class="toggle-btn" data-orientation="landscape">Landscape<br><small>(Days as Rows)</small></div>
+            </div>
         </div>
-        <div class="toggle-btn" data-orientation="landscape">Landscape<br><small>(Days as Rows)</small></div>
-      </div>
+
+        <div class="section">
+            <h3>Time Settings</h3>
+            <div class="input-group">
+                <input type="time" id="start-time" value="09:00">
+                <input type="time" id="end-time" value="17:00">
+            </div>
+            <div class="input-group">
+                <label>Duration (minutes):</label>
+                <input type="number" id="time-duration" value="60" min="15" max="240" step="15">
+            </div>
+            <button onclick="generateTimetable()">Update Timetable</button>
+        </div>
+
+        <div class="section">
+            <h3>Add Course</h3>
+            <div class="input-group">
+                <input type="text" id="course-name" placeholder="Course name">
+                <button onclick="addCourse()">Add</button>
+            </div>
+            <div class="courses-list" id="courses-list">
+                <p style="color: #666; font-style: italic;">Courses will appear here</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Add Location</h3>
+            <div class="input-group">
+                <input type="text" id="location-name" placeholder="Room/Location">
+                <button onclick="addLocation()">Add</button>
+            </div>
+            <div class="locations-list" id="locations-list">
+                <p style="color: #666; font-style: italic;">Locations will appear here</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Color Customization</h3>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+                <label>Timetable Background:</label>
+                <input type="color" class="color-input" id="bg-color" value="#ffffff">
+                
+                <label>Course Boxes:</label>
+                <input type="color" class="color-input" id="course-color" value="#007bff">
+                
+                <label>Table Borders:</label>
+                <input type="color" class="color-input" id="border-color" value="#dddddd">
+                
+                <label>Headers:</label>
+                <input type="color" class="color-input" id="header-color" value="#f8f9fa">
+            </div>
+            <button onclick="applyColors()" style="margin-top: 10px; width: 100%;">Apply Colors</button>
+        </div>
     </div>
 
-    <div class="section">
-      <h3>Time Settings</h3>
-      <div class="input-group">
-        <input type="time" id="start-time" value="09:00">
-        <input type="time" id="end-time" value="17:00">
-      </div>
-      <div class="input-group">
-        <label>Duration (minutes):</label>
-        <input type="number" id="time-duration" value="60" min="15" max="240" step="15">
-      </div>
-      <button onclick="generateTimetable()">Update Timetable</button>
+    <div class="main-content">
+        <h2>Time table</h2>
+        <div class="timetable-container">
+            <div class="timetable" id="timetable">
+                <!-- Timetable will be generated here -->
+            </div>
+        </div>
     </div>
 
-    <div class="section">
-      <h3>Add Course</h3>
-      <div class="input-group">
-        <input type="text" id="course-name" placeholder="Course name">
-        <button onclick="addCourse()">Add</button>
-      </div>
-      <div class="courses-list" id="courses-list">
-        <p style="color: #666; font-style: italic;">Courses will appear here</p>
-      </div>
-    </div>
 
-    <div class="section">
-      <h3>Add Location</h3>
-      <div class="input-group">
-        <input type="text" id="location-name" placeholder="Room/Location">
-        <button onclick="addLocation()">Add</button>
-      </div>
-      <div class="locations-list" id="locations-list">
-        <p style="color: #666; font-style: italic;">Locations will appear here</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>Color Customization</h3>
-      <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
-        <label>Timetable Background:</label>
-        <input type="color" class="color-input" id="bg-color" value="#ffffff">
-
-        <label>Course Boxes:</label>
-        <input type="color" class="color-input" id="course-color" value="#007bff">
-
-        <label>Table Borders:</label>
-        <input type="color" class="color-input" id="border-color" value="#dddddd">
-
-        <label>Headers:</label>
-        <input type="color" class="color-input" id="header-color" value="#f8f9fa">
-      </div>
-      <button onclick="applyColors()" style="margin-top: 10px; width: 100%;">Apply Colors</button>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <div class="timetable-container">
-      <div class="timetable" id="timetable">
-        <!-- Timetable will be generated here -->
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let currentOrientation = 'portrait';
-    let courses = [];
-    let locations = [];
-    let placedCourses = [];
-
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-    $(document).ready(function () {
-      generateTimetable();
-      setupOrientationToggle();
-      setupColorInputs();
-    });
-
-    function setupOrientationToggle() {
-      $('.toggle-btn').click(function () {
-        $('.toggle-btn').removeClass('active');
-        $(this).addClass('active');
-        currentOrientation = $(this).data('orientation');
-        generateTimetable();
-      });
-    }
-
-    function setupColorInputs() {
-      $('.color-input').on('change', function () {
-        applyColors();
-      });
-    }
-
-    function generateTimetable() {
-      const startTime = $('#start-time').val();
-      const endTime = $('#end-time').val();
-      const duration = parseInt($('#time-duration').val());
-
-      const start = new Date(`2024-01-01T${startTime}:00`);
-      const end = new Date(`2024-01-01T${endTime}:00`);
-
-      const timeSlots = [];
-      let current = new Date(start);
-
-      while (current < end) {
-        const next = new Date(current.getTime() + duration * 60000);
-        timeSlots.push({
-          start: current.toTimeString().slice(0, 5),
-          end: next.toTimeString().slice(0, 5)
-        });
-        current = next;
-      }
-
-      let html = '';
-
-      if (currentOrientation === 'portrait') {
-        // Days as columns
-        html += '<div class="timetable-row">';
-        html += '<div class="timetable-cell time-header">Time</div>';
-        days.forEach(day => {
-          html += `<div class="timetable-cell day-header">${day}</div>`;
-        });
-        html += '</div>';
-
-        timeSlots.forEach((slot, timeIndex) => {
-          html += '<div class="timetable-row">';
-          html += `<div class="timetable-cell time-header">${slot.start}<br>${slot.end}</div>`;
-          days.forEach((day, dayIndex) => {
-            html += `<div class="timetable-cell time-slot" data-day="${dayIndex}" data-time="${timeIndex}"></div>`;
-          });
-          html += '</div>';
-        });
-      } else {
-        // Days as rows
-        html += '<div class="timetable-row">';
-        html += '<div class="timetable-cell day-header">Day</div>';
-        timeSlots.forEach(slot => {
-          html += `<div class="timetable-cell time-header">${slot.start}<br>${slot.end}</div>`;
-        });
-        html += '</div>';
-
-        days.forEach((day, dayIndex) => {
-          html += '<div class="timetable-row">';
-          html += `<div class="timetable-cell day-header">${day}</div>`;
-          timeSlots.forEach((slot, timeIndex) => {
-            html += `<div class="timetable-cell day-slot" data-day="${dayIndex}" data-time="${timeIndex}"></div>`;
-          });
-          html += '</div>';
-        });
-      }
-
-      $('#timetable').html(html);
-      setupDroppable();
-      restorePlacedCourses();
-      applyColors();
-    }
-
-    function setupDroppable() {
-      $('.time-slot, .day-slot').droppable({
-        accept: '.course-box, .placed-course',
-        hoverClass: 'drop-zone',
-        drop: function (event, ui) {
-          const courseElement = ui.draggable;
-          const courseId = courseElement.data('course-id');
-          const dayIndex = $(this).data('day');
-          const timeIndex = $(this).data('time');
-
-          // Remove from previous position if it was placed
-          placedCourses = placedCourses.filter(c => c.id !== courseId);
-
-          // Add to new position
-          const course = courses.find(c => c.id === courseId);
-          if (course) {
-            placedCourses.push({
-              id: courseId,
-              name: course.name,
-              location: course.location || '',
-              day: dayIndex,
-              time: timeIndex
-            });
-
-            // Update the cell
-            updateCell($(this), course);
-
-            // Reset the draggable element
-            courseElement.css({
-              position: 'relative',
-              top: 'auto',
-              left: 'auto'
-            });
-          }
-        }
-      });
-    }
-
-    function updateCell(cell, course) {
-      cell.html(`
-                <div class="placed-course" data-course-id="${course.id}">
-                    <div class="course-name">${course.name}</div>
-                    <div class="course-location">${course.location || ''}</div>
-                    <button class="remove-btn" onclick="removePlacedCourse(${course.id})">&times;</button>
-                </div>
-            `);
-
-      // Make the placed course draggable
-      cell.find('.placed-course').draggable({
-        containment: '.main-content',
-        revert: 'invalid',
-        helper: 'clone',
-        zIndex: 1000
-      });
-    }
-
-    function restorePlacedCourses() {
-      placedCourses.forEach(placedCourse => {
-        const cell = $(`.time-slot[data-day="${placedCourse.day}"][data-time="${placedCourse.time}"], .day-slot[data-day="${placedCourse.day}"][data-time="${placedCourse.time}"]`);
-        if (cell.length) {
-          updateCell(cell, placedCourse);
-        }
-      });
-    }
-
-    function addCourse() {
-      const courseName = $('#course-name').val().trim();
-      if (!courseName) return;
-
-      const courseId = Date.now();
-      const course = {
-        id: courseId,
-        name: courseName,
-        location: ''
-      };
-
-      courses.push(course);
-
-      const courseHtml = `
-                <div class="course-box" data-course-id="${courseId}">
-                    <div>${courseName}</div>
-                    <button class="remove-btn" onclick="removeCourse(${courseId})">&times;</button>
-                </div>
-            `;
-
-      if ($('#courses-list p').length) {
-        $('#courses-list').html('');
-      }
-
-      $('#courses-list').append(courseHtml);
-      $('#course-name').val('');
-
-      // Make course draggable
-      $(`.course-box[data-course-id="${courseId}"]`).draggable({
-        containment: '.main-content',
-        revert: 'invalid',
-        helper: 'clone',
-        zIndex: 1000
-      });
-
-      applyColors();
-    }
-
-    function addLocation() {
-      const locationName = $('#location-name').val().trim();
-      if (!locationName) return;
-
-      const locationId = Date.now();
-      locations.push({
-        id: locationId,
-        name: locationName
-      });
-
-      const locationHtml = `
-                <div class="location-item" data-location-id="${locationId}">
-                    ${locationName}
-                    <button class="remove-btn" onclick="removeLocation(${locationId})">&times;</button>
-                </div>
-            `;
-
-      if ($('#locations-list p').length) {
-        $('#locations-list').html('');
-      }
-
-      $('#locations-list').append(locationHtml);
-      $('#location-name').val('');
-
-      // Make location draggable to courses
-      $(`.location-item[data-location-id="${locationId}"]`).draggable({
-        containment: '.sidebar',
-        revert: true,
-        helper: 'clone',
-        zIndex: 1000
-      });
-
-      // Make course boxes droppable for locations
-      $('.course-box').droppable({
-        accept: '.location-item',
-        hoverClass: 'drop-zone',
-        drop: function (event, ui) {
-          const courseId = $(this).data('course-id');
-          const locationId = ui.draggable.data('location-id');
-          const location = locations.find(l => l.id === locationId);
-
-          if (location) {
-            const course = courses.find(c => c.id === courseId);
-            if (course) {
-              course.location = location.name;
-              $(this).html(`
-                                <div>${course.name}</div>
-                                <div style="font-size: 11px; opacity: 0.9;">${location.name}</div>
-                                <button class="remove-btn" onclick="removeCourse(${courseId})">&times;</button>
-                            `);
-
-              // Update any placed courses
-              $(`.placed-course[data-course-id="${courseId}"] .course-location`).text(location.name);
-
-              // Re-setup draggable
-              $(this).draggable({
-                containment: '.main-content',
-                revert: 'invalid',
-                helper: 'clone',
-                zIndex: 1000
-              });
-            }
-          }
-        }
-      });
-    }
-
-    function removeCourse(courseId) {
-      courses = courses.filter(c => c.id !== courseId);
-      placedCourses = placedCourses.filter(c => c.id !== courseId);
-      $(`.course-box[data-course-id="${courseId}"]`).remove();
-      $(`.placed-course[data-course-id="${courseId}"]`).parent().html('');
-
-      if (courses.length === 0) {
-        $('#courses-list').html('<p style="color: #666; font-style: italic;">Courses will appear here</p>');
-      }
-    }
-
-    function removeLocation(locationId) {
-      locations = locations.filter(l => l.id !== locationId);
-      $(`.location-item[data-location-id="${locationId}"]`).remove();
-
-      if (locations.length === 0) {
-        $('#locations-list').html('<p style="color: #666; font-style: italic;">Locations will appear here</p>');
-      }
-    }
-
-    function removePlacedCourse(courseId) {
-      placedCourses = placedCourses.filter(c => c.id !== courseId);
-      $(`.placed-course[data-course-id="${courseId}"]`).parent().html('');
-    }
-
-    function applyColors() {
-      const bgColor = $('#bg-color').val();
-      const courseColor = $('#course-color').val();
-      const borderColor = $('#border-color').val();
-      const headerColor = $('#header-color').val();
-
-      $('.timetable-container').css('background-color', bgColor);
-      $('.time-slot, .day-slot').css('background-color', bgColor);
-      $('.timetable-cell').css('border-color', borderColor);
-      $('.time-header, .day-header').css('background-color', headerColor);
-      $('.course-box, .placed-course').css('background-color', courseColor);
-    }
-
-    // Handle Enter key for inputs
-    $('#course-name').keypress(function (e) {
-      if (e.which === 13) addCourse();
-    });
-
-    $('#location-name').keypress(function (e) {
-      if (e.which === 13) addLocation();
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>
