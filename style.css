@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Afacad, "Segoe UI", sans-serif;
   background: linear-gradient(
     135deg,
     var(--primary-bg) 0%,
@@ -46,17 +46,6 @@ body {
   position: relative;
   overflow-x: hidden;
 
-  /* &::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: ew-resize;
-  } */
-
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -79,111 +68,126 @@ body {
 }
 
 .section {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-}
 
-.section-header {
-  padding: 15px;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
+  .section-header {
+    padding: 1rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 
-.section-header:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
 
-.section-header h3 {
-  margin: 0;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+    h3 {
+      margin: 0;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
 
-.section-toggle {
-  color: white;
-  font-size: 18px;
-  transition: transform 0.3s ease;
-}
+    .section-toggle {
+      color: white;
+      font-size: 18px;
+      transition: transform 0.3s ease;
 
-.section-toggle.collapsed {
-  transform: rotate(-90deg);
-}
+      &.collapsed {
+        transform: rotate(-90deg);
+      }
+    }
+  }
 
-.section-content {
-  padding: 15px;
-  display: block;
-}
+  .section-content {
+    padding: 15px;
+    display: block;
 
-.section-content.collapsed {
-  display: none;
-}
+    h2 {
+      color: white !important;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
 
-h2 {
-  color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+    .input-group {
+      display: flex;
+      margin-bottom: 10px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
 
-.input-group {
-  display: flex;
-  margin-bottom: 10px;
-  gap: 8px;
-}
+      .input-box {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
 
-input[type="text"],
-input[type="number"],
-input[type="time"],
-select {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  font-size: 14px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-}
+        label {
+          width: 2.25rem;
+        }
+      }
+    }
+  }
 
-input[type="text"]::placeholder,
-input[type="number"]::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
+  input[type="text"],
+  input[type="number"],
+  input[type="time"],
+  select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+  }
 
-button {
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
+  #table-name {
+    padding: 8px 4px;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: blur(10px);
+  }
 
-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  input[type="text"]::placeholder,
+  input[type="number"]::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  button {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: var(--primary-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
 }
 
 .color-input {
   width: 50px !important;
   height: 35px;
-  padding: 2px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -193,6 +197,8 @@ button:hover {
   gap: 10px;
   margin-bottom: 15px;
 }
+
+/* Into the Sections */
 
 .toggle-btn {
   flex: 1;
@@ -205,11 +211,11 @@ button:hover {
   text-align: center;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-}
 
-.toggle-btn.active {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  &.active {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
 }
 
 .days-selection {
@@ -225,12 +231,12 @@ button:hover {
   gap: 8px;
   color: white;
   font-size: 14px;
-}
 
-.day-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: rgba(255, 255, 255, 0.8);
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: rgba(255, 255, 255, 0.8);
+  }
 }
 
 .courses-list,
@@ -242,12 +248,11 @@ button:hover {
   padding: 10px;
   margin-top: 10px;
   backdrop-filter: blur(10px);
-}
 
-.courses-list p,
-.locations-list p {
-  color: rgba(255, 255, 255, 0.7);
-  font-style: italic;
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+  }
 }
 
 .course-box,
@@ -264,13 +269,12 @@ button:hover {
   position: relative;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
 
-.course-box:hover,
-.location-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  background: rgba(0, 123, 255, 0.4);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 123, 255, 0.4);
+  }
 }
 
 .course-box {
@@ -284,10 +288,10 @@ button:hover {
 .location-item {
   background: rgba(40, 167, 69, 0.3);
   font-size: 12px;
-}
 
-.location-item:hover {
-  background: rgba(40, 167, 69, 0.4);
+  &:hover {
+    background: rgba(40, 167, 69, 0.4);
+  }
 }
 
 .save-buttons {
@@ -300,11 +304,13 @@ button:hover {
 .save-btn {
   background: rgba(40, 167, 69, 0.3);
   border: 1px solid rgba(40, 167, 69, 0.5);
-}
 
-.save-btn:hover {
+  &:hover {
   background: rgba(40, 167, 69, 0.5);
 }
+}
+
+/* Main Content */
 
 .timetable-container {
   background: rgba(255, 255, 255, 0.1);
@@ -425,11 +431,11 @@ button:hover {
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
-
+/* 
 .ui-draggable-dragging {
   z-index: 1000 !important;
   opacity: 0.8;
-}
+} */
 
 .remove-btn {
   position: absolute;
@@ -515,14 +521,14 @@ label {
     resize: vertical;
   }
 
-  .sidebar::after {
+  /* .sidebar::after {
     width: 100%;
     height: 4px;
     bottom: 0;
     right: 0;
     top: auto;
     cursor: ns-resize;
-  }
+  } */
 
   .main-content {
     padding: 10px;

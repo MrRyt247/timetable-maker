@@ -21,12 +21,21 @@ $(document).ready(function () {
   setupSidebarResize();
 });
 
+$("#table-name").on("input", function () {
+  const tableName = $(this).val().trim();
+  if (tableName) {
+    $(".main-content h2").text(tableName);
+  } else {
+    $(".main-content h2").text(tableName);
+  }
+});
+
 function toggleSection(header) {
   const section = $(header).parent();
   const content = section.find(".section-content");
   const toggle = section.find(".section-toggle");
 
-  content.toggleClass("collapsed");
+  content.slideToggle(200);
   toggle.toggleClass("collapsed");
 }
 
